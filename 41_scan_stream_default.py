@@ -10,7 +10,6 @@ import requests
 import socket
 from multiprocessing import Pool
 import configparser
-import substream
 
 config = configparser.ConfigParser()
 config.read("/root/scripts/VIDEO/config.ini")
@@ -106,5 +105,3 @@ if __name__ == "__main__":
     SEND_URL = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
     requests.post(SEND_URL, json={'chat_id': CHAT_ID, 'text': f"41_scan_stream_default done - {int(done)}"})
-    substream.main()
-    

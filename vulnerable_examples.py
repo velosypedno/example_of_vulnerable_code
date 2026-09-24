@@ -35,6 +35,7 @@ from django.views.decorators.csrf import csrf_exempt
 def update_profile_vulnerable(request):
     return "profile updated"
 
+import sqlite3
 
 def get_user_data(username):
   db = sqlite3.connect("users.db")
