@@ -6,27 +6,31 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+permissions: {}
+
 jobs:
   analyze:
     name: Analyze Code
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-      actions: read
       contents: read
 
     steps:
+      # actions/checkout@v4.2.2
       - name: Check out repository
-        # actions/checkout@v4.1.7
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
+      # github/codeql-action/init@v4.38.2
       - name: Initialize CodeQL
-        # github/codeql-action/init@v3.25.15
-        uses: github/codeql-action/init@4fa3a0092dd1b380ed63337f198124011fa5ebdb
+        uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2
         with:
           languages: 'python'
           queries: security-extended
+          build-mode: none
 
+      # github/codeql-action/analyze@v4.38.2
       - name: Perform CodeQL Analysis
-        # github/codeql-action/analyze@v3.25.15
-        uses: github/codeql-action/analyze@4fa3a0092dd1b380ed63337f198124011fa5ebdb
+        uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2
+        with:
+          category: "/language:python"
