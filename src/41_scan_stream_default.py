@@ -4,43 +4,40 @@ import os
 import cv2
 import time
 import sys
-import pymysql
 import time
 import requests
 import socket
 from multiprocessing import Pool
 import configparser
+from sqlalchemy import create_engine, text
 
 config = configparser.ConfigParser()
 config.read("/root/scripts/VIDEO/config.ini")
 host_ip = socket.gethostbyname(socket.gethostname())
 
+user = config['MySQL']['user']
+password = config['MySQL']['password']
+host = config['MySQL']['host']
+database = config['MySQL']['database']
 
-def get_cursor():
-    connection = pymysql.connect(
-        host=config['MySQL']['host'],
-        user=config['MySQL']['user'],
-        password=config['MySQL']['password'],
-        database=config['MySQL']['database'])
-
-    return connection.cursor(), connection
+engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}/{database}")
 
 
 def select_ip_list():
-    cursor, connection = get_cursor()
-    cursor = connection.cursor()
-    query = f"""SELECT `ip`, CONCAT(REPLACE(`ip`,'.','_'), '-' , `country_code`, '-', `region`, '-', `city`) as 'name_camera'
-            FROM rtsp_scan where `url` is NULL and `up` = '{os.uname()[1]}';"""
-    cursor.execute(query)
-    return cursor.fetchall()
+    query = text("""
+        SELECT `ip`, CONCAT(REPLACE(`ip`,'.','_'), '-' , `country_code`, '-', `region`, '-', `city`) as 'name_camera'
+        FROM rtsp_scan
+        WHERE `url` IS NULL AND `up` = :uname
+    """)
+    with engine.connect() as conn:
+        result = conn.execute(query, {"uname": os.uname()[1]})
+        return result.fetchall()
 
 
-
-cursor, connection = get_cursor()
-cursor = connection.cursor()
-query = "SELECT `path`, `login`, `passwd` FROM `view_support_path_default`"
-cursor.execute(query)
-link_list = cursor.fetchall()
+with engine.connect() as conn:
+    query = text("SELECT `path`, `login`, `passwd` FROM `view_support_path_default`")
+    result = conn.execute(query)
+    link_list = result.fetchall()
 
 #link_list = []
 #for i in rows:
@@ -48,14 +45,22 @@ link_list = cursor.fetchall()
 
 
 def insert_url(link_one, ip, link, login, passwd):
-    cursor, con = get_cursor()
-    cursor = con.cursor()
-
-    query = f"""UPDATE `rtsp_scan` SET `url` = '{link_one}', `up` = '{os.uname()[1]}', `link` = '{link}', `login` = '{login}', `passwd` = '{passwd}'
-                WHERE `ip` = '{ip}';"""
-    print(query)
-    cursor.execute(query)
-    con.commit()
+    query = text("""
+        UPDATE `rtsp_scan`
+        SET `url` = :link_one, `up` = :uname, `link` = :link, `login` = :login, `passwd` = :passwd
+        WHERE `ip` = :ip
+    """)
+    params = {
+        "link_one": link_one,
+        "uname": os.uname()[1],
+        "link": link,
+        "login": login,
+        "passwd": passwd,
+        "ip": ip
+    }
+    with engine.connect() as conn:
+        conn.execute(query, params)
+        conn.commit()
 
 
 def job(ip):
