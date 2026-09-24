@@ -6,11 +6,26 @@
 
 ### Installation 
 
-1. git clone git@github.com:velosypedno/example_of_vulnerable_code.git
-2. cd example_of_vulnerable_code
-3. python -m venv .venv
-4. source ./.venv/bin/activate
-5. pip install -r requirements.txt 
+1. Clone repo
+```bash
+git clone git@github.com:velosypedno/example_of_vulnerable_code.git
+```
+2. Change working dir
+```bash
+cd example_of_vulnerable_code
+```
+3. Create virtual enviroment
+```bash
+python -m venv .venv
+```
+4. Activate virtual environmnet
+```bash
+source ./.venv/bin/activate
+```
+5. Install dependencies 
+```bash
+pip install -r requirements.txt 
+```
 
 Also you can install necessary tools for sast
 
