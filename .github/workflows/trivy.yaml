@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t my-app:${{ github.sha }} .
+          docker build --no-cache -t my-app:${{ github.sha }} .
 
       - name: Generate Trivy Image SARIF Report
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
