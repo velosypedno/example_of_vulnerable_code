@@ -2,9 +2,9 @@
 
 ### Requirements
 
-*Python 3.14.7*
-*Trivy 0.73.0*
-*Docker 29.7.2*
+1. *Python 3.14.7*
+2. *Trivy 0.73.0*
+3. *Docker 29.7.2*
 
 ### Installation 
 
@@ -53,4 +53,16 @@ docker build -t example:latest .
 
 ```bash
 trivy image example:latest
+```
+
+If we need sbom only for out source code:
+
+```bash
+trivy fs --format json -o report-files.json .
+```
+
+OR
+
+```bash
+trivy fs --format table -o report-files.txt .
 ```

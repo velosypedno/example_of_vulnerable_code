@@ -3,3 +3,5 @@ venv
 env
 .env
 bandit_reports
+report-files.json
+report-files.txt
