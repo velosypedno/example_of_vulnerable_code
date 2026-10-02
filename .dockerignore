@@ -1,0 +1,9 @@
+.venv
+venv
+env
+.env
+bandit_reports
+.git
+.gitignore
+__pycache__
+*.pyc

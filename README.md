@@ -3,6 +3,8 @@
 ### Requirements
 
 *Python 3.14.7*
+*Trivy 0.73.0*
+*Docker 29.7.2*
 
 ### Installation 
 
@@ -41,4 +43,14 @@ semgrep --config auto ./
 
 ```bash
 bandit -r src/ -f html -o ./bandit_reports/{report_name}.html
+```
+
+### Build docker iamge and scan
+
+```bash
+docker build -t example:latest .
+```
+
+```bash
+trivy image example:latest
 ```
