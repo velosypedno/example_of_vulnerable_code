@@ -25,7 +25,24 @@ jobs:
         run: |
           docker build -t my-app:${{ github.sha }} .
 
-      - name: Scan Docker Image with Trivy
+      - name: Generate Trivy Image SARIF Report
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: 'my-app:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@416ff0dea110f80f0f56f0046500dbf7420e4bb0
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'trivy-image-scan'
+
+      - name: Scan Docker Image with Trivy (Table & Fail check)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: 'my-app:${{ github.sha }}'
@@ -34,19 +51,3 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-
-      - name: Run Trivy Repository Scan (SARIF)
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
-        with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy scan results to GitHub Security
-        uses: github/codeql-action/upload-sarif@416ff0dea110f80f0f56f0046500dbf7420e4bb0
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
-          category: 'trivy-repo-scan'
