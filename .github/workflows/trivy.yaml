@@ -17,18 +17,14 @@ jobs:
       contents: read
 
     steps:
-      # actions/checkout@v4.2.2
       - name: Check out repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Build Docker image
-        run: |
-          docker build --no-cache -t my-app:${{ github.sha }} .
-
-      - name: Generate Trivy Image SARIF Report
+      - name: Generate Trivy Filesystem SARIF Report
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
-          image-ref: 'my-app:${{ github.sha }}'
+          scan-type: 'fs'
+          scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
           exit-code: '0'
@@ -40,14 +36,14 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-          category: 'trivy-image-scan'
+          category: 'trivy-fs-scan'
 
-      - name: Scan Docker Image with Trivy (Table & Fail check)
+      - name: Scan Filesystem with Trivy (Table & Fail check)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
-          image-ref: 'my-app:${{ github.sha }}'
+          scan-type: 'fs'
+          scan-ref: '.'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
-          vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
