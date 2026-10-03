@@ -5,6 +5,7 @@
 1. *Python 3.14.7*
 2. *Trivy 0.73.0*
 3. *Docker 29.7.2*
+4. *Syft 1.51.0*
 
 ### Installation 
 
