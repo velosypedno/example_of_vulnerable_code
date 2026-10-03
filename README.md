@@ -66,3 +66,13 @@ OR
 ```bash
 trivy fs --format table -o report-files.txt .
 ```
+
+### SBOM usage
+
+```bash
+syft dir:. -o cyclonedx-json > sbom.json
+```
+
+```bash
+trivy sbom sbom.json
+```
