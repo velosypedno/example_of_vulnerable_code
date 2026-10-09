@@ -6,6 +6,8 @@
 2. *Trivy 0.73.0*
 3. *Docker 29.7.2*
 4. *Syft 1.51.0*
+5. *Bandit*
+6. *Semgrep*
 
 ### Installation 
 
@@ -28,12 +30,6 @@ source ./.venv/bin/activate
 5. Install dependencies 
 ```bash
 pip install -r requirements.txt 
-```
-
-Also you can install necessary tools for sast
-
-```bash
-pip install -r requirements_with_sast.txt
 ```
 
 **Usage:**
