@@ -39,6 +39,45 @@ jobs:
       - name: Run Semgrep Scan
         run: semgrep scan --config auto .
 
+  trivy:
+    name: Run Trivy Scan
+    runs-on: ubuntu-latest
+    needs: [bandit, semgrep]
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Generate Trivy Filesystem SARIF Report
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@416ff0dea110f80f0f56f0046500dbf7420e4bb0
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'trivy-fs-scan'
+
+      - name: Scan Filesystem with Trivy (Table & Fail check)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
   codeql:
     name: Analyze CodeQL
     runs-on: ubuntu-latest
