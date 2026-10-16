@@ -192,7 +192,11 @@ jobs:
 
         - name: Create Source Code Archive
           run: |
-            tar -czf source-code.tar.gz --exclude=.git --exclude=.github .
+            tar --exclude='./.git' \
+                --exclude='./.github' \
+                --exclude='./source-code.tar.gz' \
+                -czf ../source-code.tar.gz .
+            mv ../source-code.tar.gz .
 
         - name: Upload Source Archive Artifact
           uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
