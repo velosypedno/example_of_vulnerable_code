@@ -10,8 +10,7 @@ RUN apt-get update && \
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip "setuptools>=78.1.1" && \
-    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt && \
-    pip uninstall -y setuptools
+    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 
 COPY . .
 
