@@ -1,4 +1,5 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/velosypedno/example_of_vulnerable_code/badge)](https://scorecard.dev/viewer/uri/github.com/velosypedno/example_of_vulnerable_code)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15557/badge)](https://www.bestpractices.dev/projects/15557)
 
 # example_of_vulnerable_code
 
