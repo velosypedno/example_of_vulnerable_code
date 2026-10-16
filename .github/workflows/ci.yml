@@ -22,7 +22,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Bandit
-        run: pip install bandit
+        run: pip install bandit==1.9.4
 
       - name: Run Bandit Scan
         run: bandit -r . -f txt
