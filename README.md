@@ -1,3 +1,5 @@
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/velosypedno/example_of_vulnerable_code/badge)](https://scorecard.dev/viewer/uri/github.com/velosypedno/example_of_vulnerable_code)
+
 # example_of_vulnerable_code
 
 ### Requirements
