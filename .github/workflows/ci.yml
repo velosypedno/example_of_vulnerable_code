@@ -229,7 +229,20 @@ jobs:
             TAGS: ${{ needs.docker-build-push.outputs.tags }}
           run: |
             for tag in ${TAGS}; do
-              cosign sign --yes ${tag}
+              echo "Getting digest for ${tag}..."
+              # Витягуємо точний sha256 дайджест із реєстру для кожного тегу
+              digest_uri=$(crane digest --allow-nondigest ${tag} 2>/dev/null || true)
+
+              if [ -z "$digest_uri" ]; then
+                # Fallback через docker buildx, якщо crane недоступний
+                digest=$(docker buildx imagetools inspect ${tag} --format '{{json .Manifest.Digest}}' | tr -d '"')
+                digest_uri="${tag%:*}@${digest}"
+              else
+                digest_uri="${tag%:*}@${digest_uri}"
+              fi
+
+              echo "Signing digest URI: ${digest_uri}"
+              cosign sign --yes "${digest_uri}"
             done
 
         - name: Download Source Archive Artifact
